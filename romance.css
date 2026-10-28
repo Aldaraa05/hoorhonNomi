@@ -7,3 +7,13 @@ h1,h2{letter-spacing:-1.7px}em{color:#c46888}button,a{touch-action:manipulation}
 
 /* Keep faces near the top of portraits; show the entire photo when opened. */
 .photo-art img,.hero-photo{object-position:center 35%}#dialog-image .photo-art{background:#f5e5eb;aspect-ratio:auto;min-height:220px}#dialog-image .photo-art:has(img):before,#dialog-image .photo-art:has(img):after{display:none}#dialog-image .photo-art img{display:block;width:100%;height:auto;max-height:65svh;object-fit:contain}
+
+/* Polaroids flow in columns while preserving every photo's original ratio. */
+.photo-grid{display:block;columns:3;column-gap:28px;padding:10px 7px;margin-top:35px}
+.photo-card{display:inline-block;vertical-align:top;break-inside:avoid;width:100%;margin:0 0 27px;padding:12px 12px 0}
+.photo-card:after{display:none}.photo-heart{display:block;text-align:center;font:27px Georgia;color:#9f6880;padding:12px 0 15px;line-height:1}
+.photo-card .photo-art:has(img){aspect-ratio:auto;background:transparent}.photo-card .photo-art:has(img):before,.photo-card .photo-art:has(img):after{display:none}
+.photo-card .photo-art img{display:block;width:100%;height:auto;object-fit:contain}.photo-card:hover .photo-art{transform:none}
+.illustration:has(.hero-photo){aspect-ratio:auto}.hero-photo{position:relative;display:block;width:100%;height:auto;object-fit:contain}
+@media(max-width:900px){.photo-grid{columns:2;column-gap:22px}}
+@media(max-width:600px){.photo-grid{columns:2;column-gap:15px;padding:8px 3px;margin-top:26px}.photo-card{padding:7px 7px 0;margin-bottom:18px}.photo-heart{font-size:22px;padding:10px 0 12px}}

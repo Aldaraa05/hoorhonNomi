@@ -119,6 +119,22 @@ const memories = [
     "label": "Чи + Би ♡",
     "art": "",
     "image": "photos/web/3867.webp"
+  },
+  {
+    "location": "Өдөр бүр чамтай",
+    "title": "Бид хоёрын бас нэг дурсамж",
+    "caption": "Чамтай л хамт байсан нь хамгийн гоё.",
+    "label": "Чи + Би ♡",
+    "art": "",
+    "image": "photos/web/IMG_20261029_002001.webp"
+  },
+  {
+    "location": "Өдөр бүр чамтай",
+    "title": "Бид хоёрын бас нэг дурсамж",
+    "caption": "Чамтай л хамт байсан нь хамгийн гоё.",
+    "label": "Чи + Би ♡",
+    "art": "",
+    "image": "photos/web/IMG_20261029_002011.webp"
   }
 ];
 
@@ -144,12 +160,27 @@ const letter = [
 const $ = (s) => document.querySelector(s);
 const gate = $('#gate');
 const album = $('#album');
+const ENTRY_KEY = 'nomi-entry-until';
+const WEEK = 7 * 24 * 60 * 60 * 1000;
+function forgetEntry() {
+  try { localStorage.removeItem(ENTRY_KEY); } catch { /* Storage is optional. */ }
+}
+function showAlbum() {
+  gate.hidden = true; album.hidden = false;
+}
+try {
+  const until = Number(localStorage.getItem(ENTRY_KEY));
+  if (Number.isFinite(until) && until > Date.now() && until <= Date.now() + WEEK) showAlbum();
+  else forgetEntry();
+} catch { /* Private browsing may block storage; coordinate entry still works. */ }
+
 $('#unlock-form').addEventListener('submit', e => {
   e.preventDefault();
   const data = new FormData(e.currentTarget);
   const coordinate = name => Number(String(data.get(name)).trim().replace(',', '.'));
   if (coordinate('latitude') === 40.8575 && coordinate('longitude') === 81.5937) {
-    gate.hidden = true; album.hidden = false;
+    try { localStorage.setItem(ENTRY_KEY, String(Date.now() + WEEK)); } catch { /* Allow entry without persistence. */ }
+    showAlbum();
     $('#gate-error').textContent = '';
     window.scrollTo(0, 0);
     $('#home').setAttribute('tabindex', '-1'); $('#home').focus({ preventScroll: true });
@@ -163,6 +194,7 @@ $('#hint-button').addEventListener('click', e => {
   e.currentTarget.querySelector('span').textContent = open ? '−' : '＋';
 });
 $('#lock').addEventListener('click', () => {
+  forgetEntry();
   album.hidden = true; gate.hidden = false; $('#unlock-form').reset();
   history.replaceState(null, '', location.pathname + location.search);
   window.scrollTo(0, 0); $('[name="latitude"]').focus({ preventScroll: true });
@@ -181,17 +213,12 @@ function artwork(memory) {
   }
   return art;
 }
-function render(filter = 'all') {
+function render() {
   const grid = $('#photo-grid'); grid.replaceChildren();
-  memories.forEach((memory, index) => {
-    if (filter !== 'all' && filter !== memory.location) return;
+  memories.forEach(memory => {
     const card = document.createElement('button'); card.className = 'photo-card'; card.setAttribute('aria-label', memory.title + ' — дэлгэрэнгүй');
-    const meta = document.createElement('div'); meta.className = 'photo-meta';
-    const place = document.createElement('span'); place.textContent = memory.location.toUpperCase();
-    const number = document.createElement('span'); number.textContent = String(index + 1).padStart(2, '0') + ' →'; meta.append(place, number);
-    const title = document.createElement('h3'); title.textContent = memory.title;
-    const caption = document.createElement('p'); caption.textContent = memory.caption;
-    card.append(artwork(memory), meta, title, caption);
+    const heart = document.createElement('span'); heart.className = 'photo-heart'; heart.textContent = '♡'; heart.setAttribute('aria-hidden', 'true');
+    card.append(artwork(memory), heart);
     card.addEventListener('click', () => {
       $('#dialog-image').replaceChildren(artwork(memory)); $('#dialog-title').textContent = memory.title;
       $('#dialog-caption').textContent = memory.caption; $('#dialog-location').textContent = memory.location;
@@ -200,11 +227,6 @@ function render(filter = 'all') {
   });
 }
 render();
-document.querySelector('[data-filter=all] sup').textContent = String(memories.length).padStart(2, '0');
-document.querySelectorAll('[data-filter]').forEach(button => button.addEventListener('click', () => {
-  document.querySelectorAll('[data-filter]').forEach(b => { b.classList.toggle('active', b === button); b.setAttribute('aria-pressed', String(b === button)); });
-  render(button.dataset.filter);
-}));
 $('#close-dialog').addEventListener('click', () => $('#photo-dialog').close());
 $('#photo-dialog').addEventListener('click', e => { if (e.target === e.currentTarget) { const r = e.currentTarget.getBoundingClientRect(); if(e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) e.currentTarget.close(); } });
 const more = document.createElement('div'); more.id = 'letter-more'; more.hidden = true;
