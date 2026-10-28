@@ -25,22 +25,6 @@ const memories = [
     "image": "photos/web/3885.webp"
   },
   {
-    "location": "New York",
-    "title": "Хотын гэрэл, бид хоёр",
-    "caption": "New York-д хамтдаа байсан тэр мөчүүд одоо ч санаанд тод байна.",
-    "label": "Чи + Би ♡",
-    "art": "",
-    "image": "photos/web/3886.webp"
-  },
-  {
-    "location": "New York",
-    "title": "Дэлхийн дээр чамтай",
-    "caption": "Цаашдаа ч чамтай аялж, шинэ юм үзэж, хамтдаа олон дурсамжтай болмоор байна.",
-    "label": "Чи + Би ♡",
-    "art": "",
-    "image": "photos/web/3887.webp"
-  },
-  {
     "location": "Хөгжилтэй мөчүүд",
     "title": "Чиний инээмсэглэл",
     "caption": "Бас тэр гайхалтай хөөрхөн инээмсэглэл чинь.",
@@ -229,19 +213,44 @@ function render() {
 render();
 $('#close-dialog').addEventListener('click', () => $('#photo-dialog').close());
 $('#photo-dialog').addEventListener('click', e => { if (e.target === e.currentTarget) { const r = e.currentTarget.getBoundingClientRect(); if(e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) e.currentTarget.close(); } });
-const more = document.createElement('div'); more.id = 'letter-more'; more.hidden = true;
 letter.forEach((text, i) => {
   const paragraph = document.createElement('p'); paragraph.textContent = text;
   if (i === letter.length - 1) paragraph.className = 'signature';
-  (i < 2 ? $('#letter-content') : more).append(paragraph);
+  $('#letter-content').append(paragraph);
 });
-$('#letter-content').append(more);
-$('#expand-letter').addEventListener('click', e => {
-  more.hidden = !more.hidden; e.currentTarget.setAttribute('aria-expanded', String(!more.hidden));
-  e.currentTarget.replaceChildren(document.createTextNode(more.hidden ? 'Захиаг бүтнээр нь унших ' : 'Захиаг хураах '));
-  const arrow = document.createElement('span'); arrow.textContent = more.hidden ? '↓' : '↑'; e.currentTarget.append(arrow);
-  if (more.hidden) $('#letter').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
-});
+const envelopeButton = $('#open-letter');
+const letterPaper = $('#letter-paper');
+function setLetterOpen(open) {
+  envelopeButton.classList.toggle('is-open', open);
+  envelopeButton.setAttribute('aria-expanded', String(open));
+  envelopeButton.setAttribute('aria-label', open ? 'Захиаг эвхэх' : 'Чамд бичсэн захиаг нээх');
+  $('#envelope-instruction').textContent = open ? 'Үг бүр нь зөвхөн чамд. ♡' : 'Зүрхэн дээр дараад нээгээрэй ♡';
+  letterPaper.hidden = !open;
+  if (open) {
+    letterPaper.focus({ preventScroll: true });
+    if (matchMedia('(max-width: 600px)').matches) letterPaper.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
+  } else {
+    envelopeButton.focus({ preventScroll: true });
+    $('#letter').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+  }
+}
+envelopeButton.addEventListener('click', () => setLetterOpen(envelopeButton.getAttribute('aria-expanded') !== 'true'));
+$('#close-letter').addEventListener('click', () => setLetterOpen(false));
+
+// July 26, 2026 at midnight in Ulaanbaatar, independent of the viewer's timezone.
+const LOVE_START = Date.parse('2026-07-26T00:00:00+08:00');
+function updateLoveCounter() {
+  const total = Math.max(0, Math.floor((Date.now() - LOVE_START) / 1000));
+  const values = { days: Math.floor(total / 86400), hours: Math.floor(total / 3600) % 24, minutes: Math.floor(total / 60) % 60, seconds: total % 60 };
+  for (const [unit, value] of Object.entries(values)) {
+    const element = document.querySelector(`[data-time="${unit}"]`);
+    const text = String(value).padStart(2, '0');
+    if (element.textContent !== text) element.textContent = text;
+  }
+}
+updateLoveCounter();
+setInterval(updateLoveCounter, 1000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) updateLoveCounter(); });
 $('#yes').addEventListener('click', e => {
   $('#yes-message').hidden = false; e.currentTarget.textContent = 'Чи + Би = ∞ ♡';
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
