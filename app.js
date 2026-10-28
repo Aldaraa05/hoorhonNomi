@@ -149,8 +149,18 @@ const WEEK = 7 * 24 * 60 * 60 * 1000;
 function forgetEntry() {
   try { localStorage.removeItem(ENTRY_KEY); } catch { /* Storage is optional. */ }
 }
-function showAlbum() {
+let welcomeTimer;
+function showAlbum(animate = false) {
   gate.hidden = true; album.hidden = false;
+  if (animate && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    $('#welcome').hidden = false;
+    album.classList.add('album-arriving');
+    clearTimeout(welcomeTimer);
+    welcomeTimer = setTimeout(() => {
+      $('#welcome').hidden = true;
+      album.classList.remove('album-arriving');
+    }, 1900);
+  }
 }
 try {
   const until = Number(localStorage.getItem(ENTRY_KEY));
@@ -164,7 +174,7 @@ $('#unlock-form').addEventListener('submit', e => {
   const coordinate = name => Number(String(data.get(name)).trim().replace(',', '.'));
   if (coordinate('latitude') === 40.8575 && coordinate('longitude') === 81.5937) {
     try { localStorage.setItem(ENTRY_KEY, String(Date.now() + WEEK)); } catch { /* Allow entry without persistence. */ }
-    showAlbum();
+    showAlbum(true);
     $('#gate-error').textContent = '';
     window.scrollTo(0, 0);
     $('#home').setAttribute('tabindex', '-1'); $('#home').focus({ preventScroll: true });
@@ -179,6 +189,7 @@ $('#hint-button').addEventListener('click', e => {
 });
 $('#lock').addEventListener('click', () => {
   forgetEntry();
+  clearTimeout(welcomeTimer); $('#welcome').hidden = true; album.classList.remove('album-arriving');
   album.hidden = true; gate.hidden = false; $('#unlock-form').reset();
   history.replaceState(null, '', location.pathname + location.search);
   window.scrollTo(0, 0); $('[name="latitude"]').focus({ preventScroll: true });
@@ -197,16 +208,58 @@ function artwork(memory) {
   }
   return art;
 }
+const customCaption = memory => {
+  const key = memory.image.split('/').pop().replace(/\.[^.]+$/, '');
+  const caption = window.PHOTO_CAPTIONS?.[key];
+  return typeof caption === 'string' ? caption.trim() : '';
+};
+const photoDialog = $('#photo-dialog');
+let currentPhoto = 0;
+function showPhoto(index) {
+  currentPhoto = (index + memories.length) % memories.length;
+  const memory = memories[currentPhoto];
+  $('#dialog-image').replaceChildren(artwork(memory));
+  $('#dialog-title').textContent = memory.title;
+  $('#dialog-caption').textContent = customCaption(memory) || memory.caption;
+  $('#dialog-location').textContent = memory.location;
+  $('#photo-position').textContent = `${currentPhoto + 1} / ${memories.length}`;
+  photoDialog.scrollTop = 0;
+}
+$('#previous-photo').addEventListener('click', () => showPhoto(currentPhoto - 1));
+$('#next-photo').addEventListener('click', () => showPhoto(currentPhoto + 1));
+photoDialog.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+    e.preventDefault(); showPhoto(currentPhoto + (e.key === 'ArrowRight' ? 1 : -1));
+  }
+});
+let swipeStart;
+const swipeArea = $('#dialog-image');
+swipeArea.addEventListener('pointerdown', e => {
+  if (!e.isPrimary || (e.pointerType === 'mouse' && e.button !== 0)) return;
+  swipeStart = { x: e.clientX, y: e.clientY, id: e.pointerId };
+  swipeArea.setPointerCapture(e.pointerId);
+});
+swipeArea.addEventListener('pointerup', e => {
+  if (!swipeStart || e.pointerId !== swipeStart.id) return;
+  const dx = e.clientX - swipeStart.x, dy = e.clientY - swipeStart.y;
+  swipeStart = null;
+  if (Math.abs(dx) >= 45 && Math.abs(dx) > Math.abs(dy) * 1.3) showPhoto(currentPhoto + (dx < 0 ? 1 : -1));
+});
+swipeArea.addEventListener('pointercancel', () => { swipeStart = null; });
 function render() {
   const grid = $('#photo-grid'); grid.replaceChildren();
-  memories.forEach(memory => {
+  memories.forEach((memory, index) => {
     const card = document.createElement('button'); card.className = 'photo-card'; card.setAttribute('aria-label', memory.title + ' — дэлгэрэнгүй');
     const heart = document.createElement('span'); heart.className = 'photo-heart'; heart.textContent = '♡'; heart.setAttribute('aria-hidden', 'true');
-    card.append(artwork(memory), heart);
+    card.append(artwork(memory));
+    if (customCaption(memory)) {
+      const caption = document.createElement('p'); caption.className = 'personal-caption';
+      caption.textContent = customCaption(memory); card.append(caption);
+    }
+    card.append(heart);
     card.addEventListener('click', () => {
-      $('#dialog-image').replaceChildren(artwork(memory)); $('#dialog-title').textContent = memory.title;
-      $('#dialog-caption').textContent = memory.caption; $('#dialog-location').textContent = memory.location;
-      $('#photo-dialog').setAttribute('aria-labelledby', 'dialog-title'); $('#photo-dialog').showModal();
+      showPhoto(index);
+      photoDialog.setAttribute('aria-labelledby', 'dialog-title'); photoDialog.showModal();
     }); grid.append(card);
   });
 }
@@ -263,6 +316,6 @@ $('#yes').addEventListener('click', e => {
 });
 
 const heroPhoto = document.createElement('img');
-heroPhoto.src = 'photos/web/3658.webp'; heroPhoto.alt = 'Бид хоёрын хамгийн дуртай дурсамж'; heroPhoto.className = 'hero-photo';
+heroPhoto.src = 'photos/web/1589.webp'; heroPhoto.alt = 'Бид хоёрын хамгийн дуртай дурсамж'; heroPhoto.className = 'hero-photo';
 heroPhoto.addEventListener('error', () => heroPhoto.remove());
 document.querySelector('.illustration').append(heroPhoto);

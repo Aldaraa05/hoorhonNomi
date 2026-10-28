@@ -4,13 +4,14 @@
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f5f1e9"><meta name="description" content="Номид зориулсан бид хоёрын бяцхан ертөнц.">
   <title>Номидоо — Бидний түүх</title>
-  <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="romance.css"><script src="app.js" defer></script>
+  <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="romance.css"><script src="photo-captions.js" defer></script><script src="app.js" defer></script>
 </head>
 <body>
   <section id="gate" class="gate" aria-labelledby="gate-title">
     <div class="gate-art" aria-hidden="true"><span class="love-doodle d1">♡</span><span class="love-doodle d2">✧</span><span class="love-doodle d3">♡</span><div class="love-postcard"><span class="postcard-label">a little love note</span><div class="love-envelope"><span>♡</span></div><p>Чи + Би</p><small>миний хамгийн дуртай бид хоёр</small><span class="postcard-kiss">xoxo</span></div><span class="map-caption">Бидний бяцхан ертөнцөд тавтай морил ♡</span></div>
     <div class="gate-content"><a class="brand" href="./">a <span>&</span> n<span class="brand-dot">♡</span></a><div class="gate-inner"><p class="eyebrow">ЧАМД ЗОРИУЛСАН БЯЦХАН ГЭНЭТИЙН БЭЛЭГ</p><h1 id="gate-title">Хайраа,<br><em>наашаа ороорой ♡</em></h1><p class="gate-description">Зарим газар зүгээр нэг газар биш.<br>Бидний түүхийн эхлэл байдаг.</p><form id="unlock-form"><div class="coordinate-fields"><label><span>ӨРГӨРӨГ</span><div class="input-wrap"><b>N</b><input name="latitude" aria-label="Хойд өргөрөг" placeholder="00.0000" inputmode="decimal" autocomplete="off" required><span>°</span></div></label><label><span>УРТРАГ</span><div class="input-wrap"><b>W</b><input name="longitude" aria-label="Баруун уртраг" placeholder="00.0000" inputmode="decimal" autocomplete="off" required><span>°</span></div></label></div><p id="gate-error" class="error" aria-live="polite"></p><button class="primary" type="submit">Бидний ертөнцөд орох <span>→</span></button></form><button class="hint-button" id="hint-button" aria-expanded="false" aria-controls="hint">Бяцхан сануулга хэрэгтэй юу? <span>＋</span></button><p id="hint" class="hint" hidden>Зүүлтэн дээрх Jellystone-ийн координат. ♡<br>Хойд өргөрөг 40.8575 · Баруун уртраг 81.5937</p></div><p class="gate-foot">АЛДАРААГААС НОМИД <span>ХОЁР ХЯЗГААРГҮЙН ИХ ♡</span></p></div>
   </section>
+  <div id="welcome" class="welcome" role="status" hidden><div class="welcome-heart" aria-hidden="true">♡</div><p>Сайн уу, миний Номи ♡</p><span>Энд бүх зүйл чамд зориулагдсан.</span><i aria-hidden="true">♡ · ✧ · ♡</i></div>
   <div id="album" hidden>
     <header class="header"><a href="#home" class="brand">a <span>&</span> n<span class="brand-dot">♡</span></a><nav aria-label="Үндсэн цэс"><a href="#memories">Дурсамжууд</a><a href="#letter">Чамд бичсэн захиа <span>→</span></a></nav><button id="lock" class="lock" aria-label="Координат оруулах хуудас руу буцах">♡ <span>Бидний орон зай</span> →</button></header>
     <main id="home">
@@ -23,6 +24,6 @@
       <section class="forever"><p class="eyebrow">ЦААШДАА Ч БАС…</p><h2>Олон аялал. Энгийн өдрүүд.<br><em>Тэгээд үргэлж чи.</em></h2><p>Номи, би чамд хоёр хязгааргүйн их хайртай шүү.</p><div class="infinity">∞ ∞</div><p class="proposal">Миний анхны бас сүүлийн минь найз охин болооч?</p><button id="yes" class="primary">Тэгье, хайраа ♡</button><p id="yes-message" aria-live="polite" hidden>Миний хамгийн дуртай «тэгье». Чамдаа хайртай! ♡</p></section>
     </main><footer><a class="brand" href="#home">a <span>&</span> n</a><p>Бидний түүх үргэлжилсээр…</p><span>ХАЙРААР БҮТЭЭВ ♡</span></footer>
   </div>
-  <dialog id="photo-dialog"><button id="close-dialog" aria-label="Зургийг хаах">×</button><div id="dialog-image"></div><p id="dialog-location" class="eyebrow"></p><h2 id="dialog-title"></h2><p id="dialog-caption"></p></dialog>
+  <dialog id="photo-dialog"><button id="close-dialog" aria-label="Зургийг хаах">×</button><div id="dialog-image"></div><div class="photo-navigation"><button id="previous-photo" aria-label="Өмнөх зураг">←</button><span id="photo-position" aria-live="polite" aria-atomic="true"></span><button id="next-photo" aria-label="Дараах зураг">→</button></div><p class="swipe-hint">Зүүн, баруун тийш шудраад үзээрэй ♡</p><p id="dialog-location" class="eyebrow"></p><h2 id="dialog-title"></h2><p id="dialog-caption"></p></dialog>
 </body>
 </html>
