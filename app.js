@@ -74,7 +74,7 @@ function render(filter = 'all') {
     const card = document.createElement('button'); card.className = 'photo-card'; card.setAttribute('aria-label', memory.title + ' — дэлгэрэнгүй');
     const meta = document.createElement('div'); meta.className = 'photo-meta';
     const place = document.createElement('span'); place.textContent = memory.location.toUpperCase();
-    const number = document.createElement('span'); number.textContent = '0' + (index + 1) + ' ↗'; meta.append(place, number);
+    const number = document.createElement('span'); number.textContent = '0' + (index + 1) + ' →'; meta.append(place, number);
     const title = document.createElement('h3'); title.textContent = memory.title;
     const caption = document.createElement('p'); caption.textContent = memory.caption;
     card.append(artwork(memory), meta, title, caption);
