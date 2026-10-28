@@ -1,11 +1,125 @@
-// Replace photos/01.jpg through photos/06.jpg. Missing images show the illustrated placeholders.
+// Optimized photos are in photos/web/. Original uploads remain in photos/.
 const memories = [
-  { location: 'Jellystone', title: 'Бүх зүйл эхэлсэн газар', caption: 'Замын хоёр талаар хамтдаа алхаж байсан тэр өдөр. Бидний түүхийн хамгийн эхний хуудас.', label: 'Our beginning', art: '', image: 'photos/01.jpg' },
-  { location: 'New York', title: 'Хотын дээр, чамтай', caption: 'SUMMIT дээр хоёулаа mocktail уугаад сууж байсан үе. Тэр өндөрт ч миний хамгийн гоё харагдац нь чи байсан.', label: 'Above the city', art: 'city', image: 'photos/02.jpg' },
-  { location: 'New York', title: 'Empire State эгшиглэсэн нь', caption: 'Brooklyn Bridge дээр чи чихэвчээрээ “Empire State” сонсоод алхаж байсан чинь одоо ч санаанд тод байна.', label: 'You, me & New York', art: 'bridge', image: 'photos/03.jpg' },
-  { location: 'Cleveland', title: 'Ахиад нэг хот. Дахиад л бид.', caption: 'Хаашаа явснаас илүү чамтай л хамт байсан нь тэр мөчүүдийг улам тодотгож.', label: 'A little adventure', art: 'home', image: 'photos/04.jpg' },
-  { location: 'Солонгос', title: 'Хамтдаа өнгөрүүлсэн үдэш', caption: 'Солонгост хүртэл хамтдаа шоуджээ. Чиний инээдтэй хамт тэр өдрүүд хамгийн гоё дурсамж болон үлдсэн.', label: 'Seoul, with you', art: 'night', image: 'photos/05.jpg' },
-  { location: 'Монгол', title: 'Энгийн өдрүүдийн ид шид', caption: 'Хичээлээ тараад уулзах, цуг хоол идэх, кофе шопд эсвэл машинд суугаад элдвийг ярих. Чамтай байх л гоё.', label: 'Everyday kind of love', art: 'coffee', image: 'photos/06.jpg' },
+  {
+    "location": "Өдөр бүр чамтай",
+    "title": "Миний хамгийн дуртай бид хоёр",
+    "caption": "Чиний л дэргэд би үнэхээр өөрөөрөө байж чаддаг.",
+    "label": "Чи + Би ♡",
+    "art": "",
+    "image": "photos/web/3658.webp"
+  },
+  {
+    "location": "Өдөр бүр чамтай",
+    "title": "Чиний хажууд л",
+    "caption": "Хажууд чинь суугаад, чамайг илээд, үнсээд л байж баймаар.",
+    "label": "Чи + Би ♡",
+    "art": "",
+    "image": "photos/web/238.webp"
+  },
+  {
+    "location": "New York",
+    "title": "Чамтай хамт New York",
+    "caption": "Хаашаа явснаас илүү чамтай л хамт байсан нь тэр мөчүүдийг улам тодотгож.",
+    "label": "Чи + Би ♡",
+    "art": "",
+    "image": "photos/web/3885.webp"
+  },
+  {
+    "location": "New York",
+    "title": "Хотын гэрэл, бид хоёр",
+    "caption": "New York-д хамтдаа байсан тэр мөчүүд одоо ч санаанд тод байна.",
+    "label": "Чи + Би ♡",
+    "art": "",
+    "image": "photos/web/3886.webp"
+  },
+  {
+    "location": "New York",
+    "title": "Дэлхийн дээр чамтай",
+    "caption": "Цаашдаа ч чамтай аялж, шинэ юм үзэж, хамтдаа олон дурсамжтай болмоор байна.",
+    "label": "Чи + Би ♡",
+    "art": "",
+    "image": "photos/web/3887.webp"
+  },
+  {
+    "location": "Хөгжилтэй мөчүүд",
+    "title": "Чиний инээмсэглэл",
+    "caption": "Бас тэр гайхалтай хөөрхөн инээмсэглэл чинь.",
+    "label": "Чи + Би ♡",
+    "art": "",
+    "image": "photos/web/1464.webp"
+  },
+  {
+    "location": "Өдөр бүр чамтай",
+    "title": "Хамт явах зам",
+    "caption": "Анх Jellystone-ы зам дээр алхаж байсан бид хоёр.",
+    "label": "Чи + Би ♡",
+    "art": "",
+    "image": "photos/web/1589.webp"
+  },
+  {
+    "location": "Өдөр бүр чамтай",
+    "title": "Жаахан ойрхон сууя",
+    "caption": "Чамтай байх ямар гоё байдгийг дахин дахин мэдэрдэг.",
+    "label": "Чи + Би ♡",
+    "art": "",
+    "image": "photos/web/1844.webp"
+  },
+  {
+    "location": "Өдөр бүр чамтай",
+    "title": "Хамтдаа өнгөрүүлсэн өдөр",
+    "caption": "Цуг хоол идэж, элдвийг ярьдаг энгийн өдрүүдээ үргэлжлүүлмээр байна.",
+    "label": "Чи + Би ♡",
+    "art": "",
+    "image": "photos/web/240.webp"
+  },
+  {
+    "location": "Хөгжилтэй мөчүүд",
+    "title": "Хөөрхөн дурсамж нэмэгдлээ",
+    "caption": "Нэг л мэдэхэд чи миний амьдралын хамгийн чухал хүн болчихсон.",
+    "label": "Чи + Би ♡",
+    "art": "",
+    "image": "photos/web/286.webp"
+  },
+  {
+    "location": "Хөгжилтэй мөчүүд",
+    "title": "Хаана ч байсан хамт",
+    "caption": "Хаашаа явснаас илүү чамтай байсан нь л хамгийн гоё.",
+    "label": "Чи + Би ♡",
+    "art": "",
+    "image": "photos/web/291.webp"
+  },
+  {
+    "location": "Өдөр бүр чамтай",
+    "title": "Зүгээр л хоёулаа",
+    "caption": "Зүгээр л хажууд чинь суух хүртэл надад тийм гоё мөч.",
+    "label": "Чи + Би ♡",
+    "art": "",
+    "image": "photos/web/3186.webp"
+  },
+  {
+    "location": "Өдөр бүр чамтай",
+    "title": "Энгийн өдрийн ид шид",
+    "caption": "Хичээлээ тараад уулзах, цуг хоол идэх. Чамтай байх л гоё.",
+    "label": "Чи + Би ♡",
+    "art": "",
+    "image": "photos/web/3586.webp"
+  },
+  {
+    "location": "Хөгжилтэй мөчүүд",
+    "title": "Бидний хөгжилтэй мөч",
+    "caption": "Чиний хөгжилтэй, юманд чин сэтгэлээсээ ханддаг зан надад их таалагддаг.",
+    "label": "Чи + Би ♡",
+    "art": "",
+    "image": "photos/web/3719.webp"
+  },
+  {
+    "location": "Өдөр бүр чамтай",
+    "title": "Дэргэд чинь тайван",
+    "caption": "Хажууд чинь очихоор би өөрийн эрхгүй тайвширчихдаг.",
+    "label": "Чи + Би ♡",
+    "art": "",
+    "image": "photos/web/3867.webp"
+  }
 ];
 
 const letter = [
@@ -74,7 +188,7 @@ function render(filter = 'all') {
     const card = document.createElement('button'); card.className = 'photo-card'; card.setAttribute('aria-label', memory.title + ' — дэлгэрэнгүй');
     const meta = document.createElement('div'); meta.className = 'photo-meta';
     const place = document.createElement('span'); place.textContent = memory.location.toUpperCase();
-    const number = document.createElement('span'); number.textContent = '0' + (index + 1) + ' →'; meta.append(place, number);
+    const number = document.createElement('span'); number.textContent = String(index + 1).padStart(2, '0') + ' →'; meta.append(place, number);
     const title = document.createElement('h3'); title.textContent = memory.title;
     const caption = document.createElement('p'); caption.textContent = memory.caption;
     card.append(artwork(memory), meta, title, caption);
@@ -86,6 +200,7 @@ function render(filter = 'all') {
   });
 }
 render();
+document.querySelector('[data-filter=all] sup').textContent = String(memories.length).padStart(2, '0');
 document.querySelectorAll('[data-filter]').forEach(button => button.addEventListener('click', () => {
   document.querySelectorAll('[data-filter]').forEach(b => { b.classList.toggle('active', b === button); b.setAttribute('aria-pressed', String(b === button)); });
   render(button.dataset.filter);
@@ -117,6 +232,6 @@ $('#yes').addEventListener('click', e => {
 });
 
 const heroPhoto = document.createElement('img');
-heroPhoto.src = 'photos/cover.jpg'; heroPhoto.alt = 'Бид хоёрын хамгийн дуртай дурсамж'; heroPhoto.className = 'hero-photo';
+heroPhoto.src = 'photos/web/3658.webp'; heroPhoto.alt = 'Бид хоёрын хамгийн дуртай дурсамж'; heroPhoto.className = 'hero-photo';
 heroPhoto.addEventListener('error', () => heroPhoto.remove());
 document.querySelector('.illustration').append(heroPhoto);
