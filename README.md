@@ -69,3 +69,12 @@ window.PHOTO_ORDER = [
 Дэлгэсэн зураг дээр хуруугаараа зүүн тийш шудрахад дараах, баруун тийш шудрахад өмнөх зураг гарна. Сумтай товчуудыг арилгасан; компьютер дээр mouse drag эсвэл keyboard-ийн ← → хэрэглэнэ. Босоо гүйлгэх, хоёр хуруугаар томруулах боломжийг хадгалсан.
 
 Захианы бүх текст, гарын үсэг 16px. `handwriting.css` дотор монгол кирилл ө/ү дэмждэг Caveat фонтыг шууд багтаасан тул font URL ачаалах, хуучин сервер TTF буцаахгүй байх асуудлаас хамаарахгүй. Шинэ CSS/JS холбоосуудад хувилбарын дугаар нэмсэн. Local серверээ шинэчилсний дараа хуучин загвар харагдвал Ctrl+Shift+R хийнэ.
+
+## Vercel deployment
+
+1. Vercel-д GitHub account-аа холбоод **Add New → Project** дотроос `Aldaraa05/hoorhonNomi` repo-г импортлоно.
+2. Root Directory-г repo-ийн үндсэн хавтас, Framework Preset-г **Other** байлгана. `vercel.json` нь Build Command: `npm run build`, Output Directory: `dist` гэж тохируулна. Environment variable шаардлагагүй.
+3. **Deploy** дарна. Амжилттай болсон deployment-ийн Visit холбоос нь нийтлэгдсэн сайтын URL болно.
+4. Git integration болон Production Branch `main` байвал дараагийн push бүр шинэ production deployment үүсгэнэ. Deploy амжилттай болсны дараа ижил URL дээр шинэ хувилбар гарна. Photos болон `photo-captions.js` өөрчлөлтүүдэд мөн адил.
+
+`npm run build` нь `dist/` үүсгэнэ. Зөвхөн сайтын файл, вебд зориулсан жижиг зургууд, фонтыг хуулна; эх хэмжээтэй зургууд, Git metadata, development server-ийг нийтлэхгүй. Тусдаа Node backend шаардлагагүй. `dist/`-ийг гараар засахгүй, эх файлаа засаад build хийнэ.
