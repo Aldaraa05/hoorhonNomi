@@ -40,3 +40,5 @@ h1,h2{letter-spacing:-1.7px}em{color:#c46888}button,a{touch-action:manipulation}
 @keyframes love-beat{0%,100%{transform:scale(1) rotate(-8deg)}50%{transform:scale(1.12) rotate(5deg)}}@keyframes welcome-away{from{opacity:1}to{opacity:0;visibility:hidden}}@keyframes album-arrive{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:600px){#letter-content p{font-size:20px;line-height:1.7;margin-bottom:21px}#letter-content p.signature{font-size:24px}.photo-card>p.personal-caption{font-size:19px;margin:10px 2px 0}.welcome p{font-size:30px}}
 @media(prefers-reduced-motion:reduce){.welcome,.welcome-heart,.album-arriving .hero{animation:none}}
+
+#dialog-image{touch-action:pan-y pinch-zoom;overscroll-behavior-x:contain}#photo-dialog{overflow-x:hidden}

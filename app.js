@@ -225,27 +225,51 @@ function showPhoto(index) {
   $('#photo-position').textContent = `${currentPhoto + 1} / ${memories.length}`;
   photoDialog.scrollTop = 0;
 }
-$('#previous-photo').addEventListener('click', () => showPhoto(currentPhoto - 1));
-$('#next-photo').addEventListener('click', () => showPhoto(currentPhoto + 1));
 photoDialog.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
     e.preventDefault(); showPhoto(currentPhoto + (e.key === 'ArrowRight' ? 1 : -1));
   }
 });
-let swipeStart;
 const swipeArea = $('#dialog-image');
-swipeArea.addEventListener('pointerdown', e => {
-  if (!e.isPrimary || (e.pointerType === 'mouse' && e.button !== 0)) return;
-  swipeStart = { x: e.clientX, y: e.clientY, id: e.pointerId };
-  swipeArea.setPointerCapture(e.pointerId);
-});
-swipeArea.addEventListener('pointerup', e => {
-  if (!swipeStart || e.pointerId !== swipeStart.id) return;
-  const dx = e.clientX - swipeStart.x, dy = e.clientY - swipeStart.y;
+let swipeStart;
+function startSwipe(x, y) { swipeStart = { x, y }; }
+function endSwipe(x, y) {
+  if (!swipeStart) return;
+  const dx = x - swipeStart.x, dy = y - swipeStart.y;
   swipeStart = null;
-  if (Math.abs(dx) >= 45 && Math.abs(dx) > Math.abs(dy) * 1.3) showPhoto(currentPhoto + (dx < 0 ? 1 : -1));
+  if (Math.abs(dx) >= 40 && Math.abs(dx) > Math.abs(dy) * 1.3) {
+    showPhoto(currentPhoto + (dx < 0 ? 1 : -1));
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) swipeArea.animate(
+      [{ opacity: .4, transform: `translateX(${dx < 0 ? 20 : -20}px)` }, { opacity: 1, transform: 'translateX(0)' }],
+      { duration: 220, easing: 'ease-out' }
+    );
+  }
+}
+// Touch events support mobile Safari and retain vertical scrolling and pinch zoom.
+swipeArea.addEventListener('touchstart', e => {
+  if (e.touches.length === 1) startSwipe(e.touches[0].clientX, e.touches[0].clientY);
+  else swipeStart = null;
+}, { passive: true });
+swipeArea.addEventListener('touchmove', e => {
+  if (!swipeStart || e.touches.length !== 1) return;
+  const dx = e.touches[0].clientX - swipeStart.x, dy = e.touches[0].clientY - swipeStart.y;
+  if (Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy) * 1.3 && e.cancelable) e.preventDefault();
+}, { passive: false });
+swipeArea.addEventListener('touchend', e => {
+  if (e.changedTouches.length && e.touches.length === 0) endSwipe(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+}, { passive: true });
+swipeArea.addEventListener('touchcancel', () => { swipeStart = null; });
+swipeArea.addEventListener('pointerdown', e => {
+  if (e.pointerType === 'touch' || !e.isPrimary || e.button !== 0) return;
+  startSwipe(e.clientX, e.clientY); swipeArea.setPointerCapture(e.pointerId);
 });
-swipeArea.addEventListener('pointercancel', () => { swipeStart = null; });
+swipeArea.addEventListener('pointerup', e => { if (e.pointerType !== 'touch') endSwipe(e.clientX, e.clientY); });
+swipeArea.addEventListener('pointercancel', e => { if(e.pointerType !== 'touch') swipeStart = null; });
+const photoKey = memory => memory.image.split('/').pop().replace(/\.[^.]+$/, '');
+if (Array.isArray(window.PHOTO_ORDER)) {
+  const ranks = new Map(window.PHOTO_ORDER.map((key, i) => [String(key), i]));
+  memories.sort((a, b) => (ranks.get(photoKey(a)) ?? Infinity) - (ranks.get(photoKey(b)) ?? Infinity));
+}
 function render() {
   const grid = $('#photo-grid'); grid.replaceChildren();
   memories.forEach((memory, index) => {
