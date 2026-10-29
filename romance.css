@@ -1104,7 +1104,7 @@ dialog::backdrop {
 }
 .counter-doodle {
   position: absolute;
-  top: -37px;
+  top: -45px;
   left: calc(50% - 27px);
   background: var(--paper);
   padding: 0 10px;
