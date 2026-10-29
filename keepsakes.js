@@ -20,26 +20,52 @@ document.querySelector('#next-note').addEventListener('click', () => showNote(no
 document.querySelector('#close-note').addEventListener('click', () => noteDialog.close());
 
 const musicButton = document.querySelector('#music-toggle');
-const musicPanel = document.querySelector('#music-panel');
-function stopMusic() {
-  document.querySelector('#music-player').replaceChildren();
-  musicPanel.hidden = true;
-  musicButton.setAttribute('aria-expanded', 'false');
+const audio = document.querySelector('#our-song');
+const musicWidget = document.querySelector('.music-widget');
+const musicStatus = document.querySelector('#music-status');
+const seek = document.querySelector('#music-seek');
+let startingMusic = false;
+function syncMusic() {
+  const playing = !audio.paused && !audio.ended && !audio.error;
+  musicWidget.classList.toggle('is-playing', playing);
+  musicButton.setAttribute('aria-pressed', String(playing));
+  musicButton.setAttribute('aria-label', playing ? 'Video Games дууг түр зогсоох' : 'Video Games дууг тоглуулах');
+  document.querySelector('#play-symbol').textContent = playing ? 'Ⅱ' : '▶︎';
 }
-musicButton.addEventListener('click', () => {
-  if (!musicPanel.hidden) { stopMusic(); return; }
-  const frame = document.createElement('iframe');
-  frame.title = 'Lana Del Rey — Video Games · YouTube тоглуулагч';
-  frame.src = 'https://www.youtube-nocookie.com/embed/cE6wxDqdOV0?autoplay=1&playsinline=1';
-  frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
-  frame.referrerPolicy = 'strict-origin-when-cross-origin';
-  frame.allowFullscreen = true;
-  document.querySelector('#music-player').append(frame);
-  musicPanel.hidden = false; musicButton.setAttribute('aria-expanded', 'true');
+function formatTime(value) {
+  if (!Number.isFinite(value)) return '0:00';
+  return `${Math.floor(value / 60)}:${String(Math.floor(value % 60)).padStart(2, '0')}`;
+}
+function updateProgress() {
+  const ready = Number.isFinite(audio.duration) && audio.duration > 0;
+  seek.disabled = !ready;
+  seek.value = ready ? String(audio.currentTime / audio.duration * 100) : '0';
+  document.querySelector('#music-time').textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+}
+function stopMusic() { audio.pause(); syncMusic(); }
+musicButton.addEventListener('click', async () => {
+  if (startingMusic) return;
+  if (!audio.paused) { stopMusic(); musicStatus.textContent = 'Түр зогсоосон ♡'; return; }
+  startingMusic = true; musicButton.setAttribute('aria-busy', 'true');
+  musicStatus.textContent = 'Дуугаа нээж байна…';
+  try {
+    if (audio.error) audio.load();
+    await audio.play();
+    musicStatus.textContent = 'Бидний дуу эгшиглэж байна ♡';
+  } catch {
+    musicStatus.textContent = 'Дууг одоогоор тоглуулах боломжгүй байна.';
+  } finally {
+    startingMusic = false; musicButton.removeAttribute('aria-busy'); syncMusic();
+  }
 });
-document.querySelector('#close-music').addEventListener('click', () => { stopMusic(); musicButton.focus(); });
-// Leaving the album also stops the external player.
-document.querySelector('#lock').addEventListener('click', stopMusic);
+for (const event of ['play', 'pause', 'ended', 'error']) audio.addEventListener(event, syncMusic);
+audio.addEventListener('error', () => { musicStatus.textContent = 'Дууг одоогоор тоглуулах боломжгүй байна.'; });
+for (const event of ['timeupdate', 'loadedmetadata', 'durationchange', 'emptied']) audio.addEventListener(event, updateProgress);
+seek.addEventListener('input', () => {
+  if (Number.isFinite(audio.duration) && audio.duration > 0) audio.currentTime = Number(seek.value) / 100 * audio.duration;
+});
+document.querySelector('#lock').addEventListener('click', () => { stopMusic(); musicStatus.textContent = 'Пянзан дээр дараад сонсоорой ♡'; });
+syncMusic(); updateProgress();
 
 let installPrompt;
 const installDialog = document.querySelector('#install-dialog');

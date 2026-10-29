@@ -1,5 +1,5 @@
-const CACHE = 'nomi-keepsake-v1';
-const SHELL = ['./', 'index.html', 'style.css', 'romance.css', 'handwriting.css', 'app.js', 'photo-captions.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'];
+const CACHE = 'nomi-keepsake-v2';
+const SHELL = ['./', 'index.html', 'style.css', 'romance.css', 'handwriting.css', 'app.js', 'photo-captions.js', 'keepsakes.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)));
   self.skipWaiting();
