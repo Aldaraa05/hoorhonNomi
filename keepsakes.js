@@ -51,7 +51,7 @@ musicButton.addEventListener('click', async () => {
   try {
     if (audio.error) audio.load();
     await audio.play();
-    musicStatus.textContent = 'Бидний дуу эгшиглэж байна ♡';
+
   } catch {
     musicStatus.textContent = 'Дууг одоогоор тоглуулах боломжгүй байна.';
   } finally {
